@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        nav {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-size: 30px;
+            color: white;
+        }
+
+        .adminForm {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 60%;
+            margin: auto;
+        }
+
+        .myBtn {
+            display: flex;
+            width: 50%;
+            margin: auto;
+        }
+
+        #loginBtn {
+            /* background-color: rgb(105, 105, 168); */
+            padding: 8px;
+            cursor: pointer;
+            width: 100px;
+
+        }
+
+        .adminForm input[type="text"] {
+            padding: 10px;
+            border: 1px solid teal;
+            width: 300px;
+
+        }
+
+        .loginForm {
+            width: 50%;
+            /* border: 1px solid teal; */
+            display: flex;
+            margin: auto;
+            background-color: rgb(231, 228, 228);
+            /* height: 600px; */
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <li>
+            <a href="event.html">Event Page</a>
+        </li>
+    </nav>
+    <h2>Login Page</h2>
+    <div class="loginForm">
+        <form action="" class="adminForm">
+            <h2>Login Form</h2>
+            <div>
+                <!-- <label for="">Email</label> -->
+                <input type="text" placeholder="Email" id="Email" required>
+            </div>
+            <div>
+                <!-- <label for="">Password</label> -->
+                <input type="text" placeholder="Password" id="Password" required>
+            </div>
+            <div class="myBtn">
+                <button type="submit" id="loginBtn">Login</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+
+<script>
+    document.querySelector(".adminForm").addEventListener("submit", handleForm)
+
+    function handleForm(e) {
+        e.preventDefault()
+        let email = document.querySelector("#Email").value
+        let password = document.querySelector("#Password").value
+
+        let obj = { email, password }
+
+        // console.log(email,password);
+        //https://reqres.in/api/login
+        fetch("https://reqres.in/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(obj)
+        }).then((res) => res.json())
+            .then((data) => {
+                // console.log("auth", data);
+                localStorage.setItem("token", JSON.stringify(data.token))
+                if (data.token) {
+                    window.location.href = "dashboard.html"
+                } else {
+                    alert("Login failed")
+
+                }
+
+            })
+            .catch((err) => {
+                console.log(err);
+                alert("Login failed")
+            })
+
+        document.querySelector(".adminForm").reset()
+
+    }
+
+
+
+
+</script>

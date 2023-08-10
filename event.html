@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Page </title>
+    <style>
+        nav {
+            background-color: teal;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-size: 30px;
+            color: white;
+        }
+
+        .container {
+            /* border: 1px solid black; */
+            display: grid;
+            /* align-items: center; */
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 20px;
+            margin: 40px;
+            justify-content: center;
+        }
+
+        .cardDiv {
+            border: 1px solid teal;
+            padding: 10px;
+            align-content: center;
+
+        }
+
+        .cardDiv img {
+            width: 100%;
+        }
+
+        #filter {
+            width: 250px;
+            padding: 8px;
+            font-size: 20px;
+        }
+
+        #sort {
+            width: 250px;
+            padding: 8px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <li>
+            <a href="index.html">Home Page</a>
+        </li>
+    </nav>
+    <br> <br>
+    <h2>Events Page</h2>
+
+    <select name="" id="filter">
+        <option value="">Filter by Category</option>
+        <option value="Music">Music</option>
+        <option value="Sports">Sports</option>
+        <option value="Workshop">Workshop</option>
+    </select>
+    <br> <br>
+
+    <select name="" id="sort">
+        <option value="">Sort by Price</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+    <br> <br>
+    <div class="container">
+
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    let bag = []
+
+    let url = `https://json-mock-server-1d6y.onrender.com/events`
+
+    fetch(url).then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+            displayCards(data)
+            bag = data
+        })
+        .catch((err) => {
+            console.log(err)
+            alert(err)
+        })
+
+
+    function displayCards(data) {
+
+        document.querySelector(".container").innerHTML = ""
+
+        data.forEach(el => {
+            const cardDiv = document.createElement("div")
+            cardDiv.setAttribute("class", "cardDiv")
+
+            let poster = document.createElement("img")
+            poster.setAttribute("src", el.poster)
+
+            let name = document.createElement("h2")
+            name.innerText = el.name
+
+            let description = document.createElement("p")
+            description.innerText = el.description
+
+
+            let date = document.createElement("h4")
+            date.innerText = `Date : ${el.date}`
+
+
+            let location = document.createElement("h4")
+            location.innerText = `Location : ${el.location}`
+
+
+            let category = document.createElement("h4")
+            category.innerText = `Category :${el.category}`
+
+
+            let price = document.createElement("h4")
+            price.innerText = `Price : ${el.price}`
+
+
+            cardDiv.append(poster, name, description, date, location, category, price,)
+            document.querySelector(".container").append(cardDiv)
+
+        });
+
+    }
+
+
+    //filerting
+
+    document.querySelector("#filter").addEventListener("change", handleFilter)
+
+
+    function handleFilter() {
+        let filterVal = document.querySelector("#filter").value
+        // console.log("filter invoked", filterVal)
+        let filteredData = bag.filter((el) => {
+            return el.category == filterVal
+        })
+        //  console.log("filtereddata",filteredData);
+        displayCards(filteredData)
+    }
+
+
+    //sorting
+
+    document.querySelector("#sort").addEventListener("change", handleSort)
+
+    function handleSort() {
+        let sortval = document.querySelector("#sort").value
+        console.log("sort invoked", sortval)
+
+        let sortedData = bag.sort((a, b) => {
+            if (sortval = "asc") {
+                return a.price - b.price
+            } else {
+                return b.price - a.price
+            }
+        })
+        // console.log("sortedData",sortedData);
+        displayCards(sortedData)
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
